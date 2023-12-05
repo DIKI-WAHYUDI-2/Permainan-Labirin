@@ -18,11 +18,19 @@
 
 .kata{
     -fx-text-fill: #2a6553;
-    -fx-font-size: 30px;
+    -fx-font-size: 50px;
     -fx-font-style: italic;
 }
 
 .kata-menu{
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a6553;
+    -fx-font-size: 30px;
+    -fx-effect: dropshadow(three-pass-box, white, 12, 0, 0.5, 0.5);
+    -fx-font-style: italic;
+}
+
+.easy-menu{
     -fx-font-weight: bold;
     -fx-text-fill: #2a6553;
     -fx-font-size: 30px;

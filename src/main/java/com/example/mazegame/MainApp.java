@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,32 +35,46 @@ public class MainApp extends Application {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
-        Image image = new Image("file:src/assets/opening.jpg");
-        Image image1 = new Image("file:src/assets/menu.jpg");
+        Image image = new Image("file:src/assets/layout-1.jpg");
+        Image image2 = new Image("file:src/assets/layout-2.jpg");
 
         ImageView imageView = new ImageView(image);
-        ImageView imageView1 = new ImageView(image1);
+        ImageView imageView1 = new ImageView(image2);
 
-        Font font = Font.loadFont("file:src/fonts/PantonNarrow-Trial-Regular.ttf",0);
+        Font fontPanton = Font.loadFont(getClass().getResourceAsStream("/fonts/PantonNarrow-Trial-Regular.ttf"), 40);
+        Font fontBobbyJones = Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 30);
+        Font fontMokoto = Font.loadFont(getClass().getResourceAsStream("/Mokoto-Demo-Soft.otf"), 30);
 
         transition = createAndSetupTransition();
 
         //Scene 1
-        Label label = createDynamicLabel("Welcome to Maze", font, 5, -100);
-        label.getStyleClass().add("welcome");
+        Label label = new Label();
+        label.setText("MAZZ");
+        label.setTranslateX(-50);
+        label.setTranslateY(-100);
+        label.setTextFill(Color.WHITE);
+        label.setRotate(-8);
+        label.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 110));
 
-        Label label2 = createDynamicLabel("Temukan  Jalan  Pulang  dan  Menangkan  Permainan", font, 0, 10);
-        label2.getStyleClass().add("kata");
 
-        Button startButton = new Button("START");
-        startButton.getStyleClass().add("tombol-start");
-        startButton.setFont(font);
-        startButton.setMaxWidth(150);
+        Label label2 = new Label();
+        label2.setText("Y");
+        label2.setTranslateX(90);
+        label2.setTranslateY(-129);
+        label2.setTextFill(Color.WHITE);
+        label2.setRotate(10);
+        label2.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 150));
+
+        Label startButton = new Label();
+        startButton.setText("START");
         startButton.setTranslateX(0);
-        startButton.setTranslateY(100);
-        setupHoverEffect(startButton,null,20, 0);
+        startButton.setTranslateY(140);
+        startButton.setTextFill(Color.ORANGE);
+        startButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Mokoto-Demo.ttf"), 50));
 
-        startButton.setOnAction(e -> switchToScene2());
+        setupHoverEffect(startButton,5, 0);
+
+        startButton.setOnMouseClicked(e -> switchToScene2());
 
         imageView.setFitWidth(bounds.getWidth());
         imageView.setFitHeight(bounds.getHeight());
@@ -71,72 +86,76 @@ public class MainApp extends Application {
         root.getChildren().add(label2);
 
         //Scene 2
-        Label label3 = createDynamicLabel("C H O O S E   Y O U R   D I F F I C U L T Y", font, 0, -200);
-        label3.getStyleClass().add("kata-menu");
+        Label difficultWord = new Label();
+        difficultWord.setText("CHOOSE YOUR DIFFICULTY");
+        difficultWord.setTextFill(Color.WHITE);
+        difficultWord.setTranslateX(80);
+        difficultWord.setTranslateY(-165);
+        difficultWord.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Mokoto-Demo.ttf"), 50));
 
         //easy
-        Circle circle = createCircle(10,-140,-50);
-        Label menuEasy = createDynamicLabel("E A S Y", font, -60, -50);
-        setupHoverEffect(menuEasy, circle,10, -60);
-        menuEasy.getStyleClass().add("easy-menu");
-
-        menuEasy.setOnMouseClicked(e -> {
-            switchToMazeSolverApp();
-        });
+        Label easyMenu = new Label();
+        easyMenu.setText("EASY");
+        easyMenu.setTranslateX(100);
+        easyMenu.setTranslateY(-23);
+        easyMenu.setTextFill(Color.ORANGE);
+        easyMenu.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 60));
+        setupHoverEffect(easyMenu, 5, 100);
+        easyMenu.setOnMouseClicked(e -> switchToMazeSolverApp());
 
         //medium
-        Circle circle1 = createCircle(10,-140,20);
-        Label menuMedium = createDynamicLabel("M E D I U M", font, -30, 20);
-        setupHoverEffect(menuMedium, circle1, 10, -30);
-        menuMedium.getStyleClass().add("easy-menu");
+        Label mediumMenu = new Label();
+        mediumMenu.setText("MEDIUM");
+        mediumMenu.setTranslateX(100);
+        mediumMenu.setTranslateY(73);
+        mediumMenu.setTextFill(Color.ORANGE);
+        mediumMenu.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 60));
+        setupHoverEffect(mediumMenu, 5, 100);
 
         //hard
-        Circle circle2 = createCircle(10, -140, 90);
-        Label menuHard = createDynamicLabel("H A R D", font, -60, 90);
-        setupHoverEffect(menuHard, circle2, 10, -60);
-        menuHard.getStyleClass().add("easy-menu");
+        Label hardMenu = new Label();
+        hardMenu.setText("HARD");
+        hardMenu.setTranslateX(100);
+        hardMenu.setTranslateY(165);
+        hardMenu.setTextFill(Color.ORANGE);
+        hardMenu.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 60));
+        setupHoverEffect(hardMenu, 5, 100);
+
+        Label title = new Label();
+        title.setText("MAZZ");
+        title.setTextFill(Color.WHITE);
+        title.setTranslateX(-480);
+        title.setTranslateY(-230);
+        title.setRotate(-8);
+        title.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 110));
+
+        Label title2 = new Label();
+        title2.setText("Y");
+        title2.setTextFill(Color.WHITE);
+        title2.setTranslateX(-338);
+        title2.setTranslateY(-260);
+        title2.setRotate(10);
+        title2.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 150));
 
         imageView1.setFitWidth(bounds.getWidth());
         imageView1.setFitHeight(bounds.getHeight());
 
         StackPane layout2 = new StackPane();
         layout2.getChildren().add(imageView1);
-        layout2.getChildren().add(label3);
-        layout2.getChildren().add(circle);
-        layout2.getChildren().add(circle1);
-        layout2.getChildren().add(circle2);
-        layout2.getChildren().add(menuEasy);
-        layout2.getChildren().add(menuMedium);
-        layout2.getChildren().add(menuHard);
+        layout2.getChildren().add(difficultWord);
+        layout2.getChildren().add(easyMenu);
+        layout2.getChildren().add(mediumMenu);
+        layout2.getChildren().add(hardMenu);
+        layout2.getChildren().add(title);
+        layout2.getChildren().add(title2);
 
-        scene2 = new Scene(layout2, bounds.getWidth(), bounds.getHeight());
-        scene2.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        scene2 = new Scene(layout2, bounds.getWidth(), bounds.getHeight()-20);
 
-        scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
-        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        scene = new Scene(root, bounds.getWidth(), bounds.getHeight()-20);
 
         stage.setScene(scene);
         stage.setTitle("Maze Games");
         stage.show();
-    }
-
-    private Circle createCircle(int radius, int x, int y){
-        Circle circle = new Circle();
-        circle.setRadius(radius);
-        circle.setTranslateX(x);
-        circle.setTranslateY(y);
-        circle.setFill(Color.RED);
-
-        return circle;
-    }
-
-    private Label createDynamicLabel(String text, Font font, int x, int y) {
-        Label label = new Label(text);
-        label.setFont(font);
-        label.setTranslateX(x);
-        label.setTranslateY(y);
-
-        return label;
     }
 
     private TranslateTransition createAndSetupTransition() {
@@ -152,22 +171,8 @@ public class MainApp extends Application {
         transition.play();
     }
 
-    private void setupHoverEffect(Node node, Circle circle, double setByX, int setTranslateX) {
+    private void setupHoverEffect(Node node, double setByX, int setTranslateX) {
 
-        if (circle != null){
-            node.setOnMouseEntered(e -> {
-                configureAndPlayTransition(node, setByX);
-                circle.setFill(Color.GREEN);
-                stage.getScene().setCursor(Cursor.HAND);
-            });
-
-            node.setOnMouseExited(e -> {
-                stage.getScene().setCursor(Cursor.DEFAULT);
-                circle.setFill(Color.RED);
-                transition.stop();
-                node.setTranslateX(setTranslateX);
-            });
-        } else {
             node.setOnMouseEntered(e -> {
                 configureAndPlayTransition(node, setByX);
                 stage.getScene().setCursor(Cursor.HAND);
@@ -178,7 +183,6 @@ public class MainApp extends Application {
                 transition.stop();
                 node.setTranslateX(setTranslateX);
             });
-        }
     }
 
     private void switchToMazeSolverApp() {

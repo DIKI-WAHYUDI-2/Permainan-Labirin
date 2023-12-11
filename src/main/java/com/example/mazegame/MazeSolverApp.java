@@ -1,7 +1,6 @@
 package com.example.mazegame;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -14,33 +13,18 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MazeSolverApp extends Application {
+    private Maze maze;
+    private boolean[][] visited;
+    private int playerRow;
+    private int playerCol;
+    private boolean isSolving;
 
     private static final int CELL_SIZE = 30;
     private static final int MAZE_WIDTH = 13;
     private static final int MAZE_HEIGHT = 10;
 
-    private char[][] maze = {
-
-            {'.', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
-            {'.', '.', '0', '.', '0', '.', '0', '.', '.', '.', '.', '.', '0'},
-            {'0', '.', '0', '.', '.', '.', '0', '.', '0', '0', '0', '.', '0'},
-            {'0', '.', '.', '.', '0', '0', '0', '.', '.', '.', '.', '.', '0'},
-            {'0', '.', '0', '.', '.', '.', '.', '.', '0', '0', '0', '.', '0'},
-            {'0', '.', '0', '.', '0', '0', '0', '.', '0', '.', '.', '.', '0'},
-            {'0', '.', '0', '.', '0', '.', '.', '.', '0', '0', '0', '.', '0'},
-            {'0', '.', '0', '.', '0', '0', '0', '.', '0', '.', '0', '.', '0'},
-            {'0', '.', '.', '.', '.', '.', '.', '.', '.', '.', '0', '.', '0'},
-            {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '.', '.'} // row = 9/ col = 12
-    };
-
-    private boolean[][] visited;
-    private int playerRow = 0;
-    private int playerCol = 0;
-
-
     @Override
     public void start(Stage primaryStage) {
-
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
@@ -50,7 +34,6 @@ public class MazeSolverApp extends Application {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        // Add DFS button
         Label dfsButton = new Label("DFS");
         dfsButton.setOnMouseClicked(event -> solveMaze(gc));
         root.setBottom(dfsButton);
@@ -59,28 +42,42 @@ public class MazeSolverApp extends Application {
         drawMaze(gc);
         drawPlayer(gc);
 
-        // Handle player movement
         canvas.setOnKeyPressed(e -> movePlayer(e.getCode(), gc));
 
         Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
-        scene.setOnKeyPressed(e -> movePlayer(e.getCode(), gc));  // Tambahkan handler ke event scene
+        scene.setOnKeyPressed(e -> movePlayer(e.getCode(), gc));
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Maze Solver");
         primaryStage.show();
     }
 
-    private void initializeMaze() {
+    public void initializeMaze() {
         visited = new boolean[MAZE_HEIGHT][MAZE_WIDTH];
         playerRow = 0;
         playerCol = 0;
+
+         char[][] mazeArray = {
+
+                {'.', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
+                {'.', '.', '0', '.', '0', '.', '0', '.', '.', '.', '.', '.', '0'},
+                {'0', '.', '0', '.', '.', '.', '0', '.', '0', '0', '0', '.', '0'},
+                {'0', '.', '.', '.', '0', '0', '0', '.', '.', '.', '.', '.', '0'},
+                {'0', '.', '0', '.', '.', '.', '.', '.', '0', '0', '0', '.', '0'},
+                {'0', '.', '0', '.', '0', '0', '0', '.', '0', '.', '.', '.', '0'},
+                {'0', '.', '0', '.', '0', '.', '.', '.', '0', '0', '0', '.', '0'},
+                {'0', '.', '0', '.', '0', '0', '0', '.', '0', '.', '0', '.', '0'},
+                {'0', '.', '.', '.', '.', '.', '.', '.', '.', '.', '0', '.', '0'},
+                {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '.', '.'} // row = 9/ col = 12
+        };
+        maze = new Maze(mazeArray);
     }
 
-    private void drawMaze(GraphicsContext gc) {
+    public void drawMaze(GraphicsContext gc) {
         for (int j = 0; j < MAZE_WIDTH; j++) {
             for (int i = 0; i < MAZE_HEIGHT; i++) {
                 Color color;
-                switch (maze[i][j]) {
+                switch (maze.getMaze()[i][j]) {
                     case '.':
                         color = Color.WHITE;
                         break;
@@ -102,14 +99,19 @@ public class MazeSolverApp extends Application {
         }
     }
 
-    private void drawPlayer(GraphicsContext gc) {
+    public void drawPlayer(GraphicsContext gc) {
         gc.setFill(Color.RED);
         gc.fillOval(playerCol * CELL_SIZE, playerRow * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     }
 
+    public boolean isValidMove(int row, int col) {
+        if (row >= 0 && row < MAZE_HEIGHT && col >= 0 && col < MAZE_WIDTH) {
+            return maze.getMaze()[row][col] == '.' || maze.getMaze()[row][col] == '*';
+        }
+        return false;
+    }
 
-    private boolean isSolving = false;
-    private void movePlayer(KeyCode code, GraphicsContext gc) {
+    public void movePlayer(KeyCode code, GraphicsContext gc) {
         if (!isSolving) {
             int rowChange = 0;
             int colChange = 0;
@@ -142,94 +144,17 @@ public class MazeSolverApp extends Application {
         }
     }
 
-
-    private boolean isValidMove(int row, int col) {
-        if (row >= 0 && row < MAZE_HEIGHT && col >= 0 && col < MAZE_WIDTH) {
-            return maze[row][col] == '.' || maze[row][col] == '*'; // Ijinkan pemain melewati jalur solusi yang berwarna biru
-        }
-        return false;
-    }
-
-    private void solveMaze(GraphicsContext gc) {
+    public void solveMaze(GraphicsContext gc) {
         isSolving = true;
         MazeSolver mazeSolver = new MazeSolver(maze, visited, playerRow, playerCol, this, gc);
         new Thread(mazeSolver).start();
     }
 
-
-    private class MazeSolver implements Runnable {
-        private char[][] maze;
-        private boolean[][] visited;
-        private MazeSolverApp mazeSolverApp;
-        private GraphicsContext gc;
-        private int startRow;
-        private int startCol;
-
-        public MazeSolver(char[][] maze, boolean[][] visited, int startRow, int startCol, MazeSolverApp mazeSolverApp, GraphicsContext gc) {
-            this.maze = maze;
-            this.visited = visited;
-            this.startRow = startRow;
-            this.startCol = startCol;
-            this.mazeSolverApp = mazeSolverApp;
-            this.gc = gc;
-        }
-
-        @Override
-        public void run() {
-            depthFirstSearch(startRow, startCol);
-            isSolving = false;
-        }
-
-        private boolean depthFirstSearch(int row, int col) {
-            if (isValidMove(row, col) && !visited[row][col]) {
-                visited[row][col] = true;
-
-                if (row == MAZE_HEIGHT - 1 && col == MAZE_WIDTH - 1) {
-                    maze[row][col] = '*';
-                    Platform.runLater(() -> {
-                        drawMaze(gc);
-                        drawPlayer(gc);
-                    });
-
-                    return true; // Hentikan rekursi jika goal ditemukan
-                }
-
-                maze[row][col] = '*';
-                Platform.runLater(() -> {
-                    drawMaze(gc);
-                    drawPlayer(gc);
-                });
-
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (depthFirstSearch(row - 1, col)) return true;
-                if (depthFirstSearch(row, col + 1)) return true;
-                if (depthFirstSearch(row + 1, col)) return true;
-                if (depthFirstSearch(row, col - 1)) return true;
-
-                maze[row][col] = ' ';
-                visited[row][col] = false;
-                Platform.runLater(() -> {
-                    drawMaze(gc);
-                    drawPlayer(gc);
-                });
-
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return false;
-        }
+    public void setSolving(boolean solving) {
+        isSolving = solving;
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 }
-

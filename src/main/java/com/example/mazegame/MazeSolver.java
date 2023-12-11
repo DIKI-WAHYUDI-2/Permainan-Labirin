@@ -1,69 +1,88 @@
 package com.example.mazegame;
 
-import javafx.scene.Node;
+import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
 
-public class MazeSolver {
-    private char[][] maze;
+public class MazeSolver implements Runnable {
+    private Maze maze;
     private boolean[][] visited;
+    private int startRow;
+    private int startCol;
+    private MazeSolverApp mazeSolverApp;
+    private GraphicsContext gc;
 
-    public MazeSolver(char[][] maze) {
+    public MazeSolver(Maze maze, boolean[][] visited, int startRow, int startCol, MazeSolverApp mazeSolverApp, GraphicsContext gc) {
         this.maze = maze;
-        this.visited = new boolean[maze.length][maze[0].length];
+        this.visited = visited;
+        this.startRow = startRow;
+        this.startCol = startCol;
+        this.mazeSolverApp = mazeSolverApp;
+        this.gc = gc;
     }
 
-    public boolean solveMaze() {
-        return depthFirstSearch(0, 0);
+    @Override
+    public void run() {
+        depthFirstSearch(startRow, startCol);
+        mazeSolverApp.setSolving(false);
     }
 
-    private boolean isValidSpot(int r, int c) {
-        if (r >= 0 && r < maze.length && c >= 0 && c < maze[0].length) {
-            return maze[r][c] == '.';
+    private boolean depthFirstSearch(int row, int col) {
+
+        if (isValidMove(row, col) && !visited[row][col]) {
+            visited[row][col] = true;
+
+
+            if (row == maze.getMaze().length - 1 && col == maze.getMaze()[0].length - 1) {
+                maze.getMaze()[row][col] = '*';
+                Platform.runLater(() -> {
+                    mazeSolverApp.drawMaze(gc);
+                    mazeSolverApp.drawPlayer(gc);
+                });
+
+                return true;
+            }
+
+            maze.getMaze()[row][col] = '*';
+            Platform.runLater(() -> {
+                mazeSolverApp.drawMaze(gc);
+                mazeSolverApp.drawPlayer(gc);
+            });
+
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            //Atas
+            if (depthFirstSearch(row - 1, col)) return true;
+            //Kanan
+            if (depthFirstSearch(row, col + 1)) return true;
+            //Bawah
+            if (depthFirstSearch(row + 1, col)) return true;
+            //Kiri
+            if (depthFirstSearch(row, col - 1)) return true;
+
+            maze.getMaze()[row][col] = ' ';
+            visited[row][col] = false;
+            Platform.runLater(() -> {
+                mazeSolverApp.drawMaze(gc);
+                mazeSolverApp.drawPlayer(gc);
+            });
+
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
 
-    private boolean depthFirstSearch(int r, int c) {
-
-        if (isValidSpot(r, c) && !visited[r][c]) {
-            visited[r][c] = true;
-
-            if (r == maze.length - 1 && c == maze[0].length - 1) {
-                maze[r][c] = '*';
-                return true;
-            }
-
-            maze[r][c] = '*';
-            sleep();
-
-            if (depthFirstSearch(r - 1, c)) {
-                return true;
-            }
-
-            if (depthFirstSearch(r, c + 1)) {
-                return true;
-            }
-
-            if (depthFirstSearch(r + 1, c)) {
-                return true;
-            }
-
-            if (depthFirstSearch(r, c - 1)) {
-                return true;
-            }
-
-            maze[r][c] = ' ';
-            visited[r][c] = false;
-            sleep();
+    private boolean isValidMove(int row, int col) {
+        if (row >= 0 && row < maze.getMaze().length && col >= 0 && col < maze.getMaze()[0].length) {
+            return maze.getMaze()[row][col] == '.' || maze.getMaze()[row][col] == '*';
         }
         return false;
-    }
-
-
-    private void sleep() {
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }

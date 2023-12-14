@@ -37,13 +37,11 @@ public class MainApp extends Application {
 
         Image image = new Image("file:src/assets/layout-1.jpg");
         Image image2 = new Image("file:src/assets/layout-2.jpg");
+        Image image3 = new Image("file:src/assets/blood-element.png");
 
         ImageView imageView = new ImageView(image);
-        ImageView imageView1 = new ImageView(image2);
+        ImageView imageView2 = new ImageView(image2);
 
-        Font fontPanton = Font.loadFont(getClass().getResourceAsStream("/fonts/PantonNarrow-Trial-Regular.ttf"), 40);
-        Font fontBobbyJones = Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 30);
-        Font fontMokoto = Font.loadFont(getClass().getResourceAsStream("/Mokoto-Demo-Soft.otf"), 30);
 
         transition = createAndSetupTransition();
 
@@ -79,11 +77,42 @@ public class MainApp extends Application {
         imageView.setFitWidth(bounds.getWidth());
         imageView.setFitHeight(bounds.getHeight());
 
+
+//        int[] positionX = {-85,68,120};
+//        int[] positionY = {70,-37,-60};
+//        int[] rotaion = {-10,-10,0};
+//
+//        for (int i = 0; i < positionX.length; i++) {
+//            ImageView imageView3 = new ImageView(image3);
+//            imageView3.setLayoutX(positionX[i]);
+//            imageView3.setLayoutY(positionY[i]);
+//            imageView3.setRotate(rotaion[i]);
+//            root.getChildren().add(imageView3);
+//        }
+
+//        imageView3.setFitWidth(74);
+//        imageView3.setFitHeight(40);
+
+//        imageView3.setFitWidth(115);
+//        imageView3.setFitHeight(70);
+
+//        imageView3.setRotate(0);
+
+//        imageView3.setTranslateX(-85);
+//        imageView3.setTranslateY(-37);
+
+//        imageView3.setTranslateX(68);
+//        imageView3.setTranslateY(-60);
+
+//        imageView3.setTranslateX(120);
+//        imageView3.setTranslateY(-155);
+
         StackPane root = new StackPane();
         root.getChildren().add(imageView);
         root.getChildren().add(startButton);
         root.getChildren().add(label);
         root.getChildren().add(label2);
+
 
         //Scene 2
         Label difficultWord = new Label();
@@ -101,7 +130,7 @@ public class MainApp extends Application {
         easyMenu.setTextFill(Color.ORANGE);
         easyMenu.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 60));
         setupHoverEffect(easyMenu, 5, 100);
-        easyMenu.setOnMouseClicked(e -> switchToMazeSolverApp());
+        easyMenu.setOnMouseClicked(e -> switchLevel());
 
         //medium
         Label mediumMenu = new Label();
@@ -137,11 +166,11 @@ public class MainApp extends Application {
         title2.setRotate(10);
         title2.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 150));
 
-        imageView1.setFitWidth(bounds.getWidth());
-        imageView1.setFitHeight(bounds.getHeight());
+        imageView2.setFitWidth(bounds.getWidth());
+        imageView2.setFitHeight(bounds.getHeight());
 
         StackPane layout2 = new StackPane();
-        layout2.getChildren().add(imageView1);
+        layout2.getChildren().add(imageView2);
         layout2.getChildren().add(difficultWord);
         layout2.getChildren().add(easyMenu);
         layout2.getChildren().add(mediumMenu);
@@ -185,10 +214,10 @@ public class MainApp extends Application {
             });
     }
 
-    private void switchToMazeSolverApp() {
-        MazeSolverApp mazeSolverApp = new MazeSolverApp();
-        mazeSolverApp.start(new Stage());
-        stage.close();  // Tutup stage saat ini (HelloApplication)
+    private void switchLevel() {
+        MazeEasy level = new MazeEasy();
+        level.start(new Stage());
+        stage.close();
     }
 
     public void switchToScene2(){

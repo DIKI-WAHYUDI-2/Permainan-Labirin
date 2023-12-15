@@ -6,15 +6,12 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -77,36 +74,6 @@ public class MainApp extends Application {
         imageView.setFitWidth(bounds.getWidth());
         imageView.setFitHeight(bounds.getHeight());
 
-
-//        int[] positionX = {-85,68,120};
-//        int[] positionY = {70,-37,-60};
-//        int[] rotaion = {-10,-10,0};
-//
-//        for (int i = 0; i < positionX.length; i++) {
-//            ImageView imageView3 = new ImageView(image3);
-//            imageView3.setLayoutX(positionX[i]);
-//            imageView3.setLayoutY(positionY[i]);
-//            imageView3.setRotate(rotaion[i]);
-//            root.getChildren().add(imageView3);
-//        }
-
-//        imageView3.setFitWidth(74);
-//        imageView3.setFitHeight(40);
-
-//        imageView3.setFitWidth(115);
-//        imageView3.setFitHeight(70);
-
-//        imageView3.setRotate(0);
-
-//        imageView3.setTranslateX(-85);
-//        imageView3.setTranslateY(-37);
-
-//        imageView3.setTranslateX(68);
-//        imageView3.setTranslateY(-60);
-
-//        imageView3.setTranslateX(120);
-//        imageView3.setTranslateY(-155);
-
         StackPane root = new StackPane();
         root.getChildren().add(imageView);
         root.getChildren().add(startButton);
@@ -130,7 +97,12 @@ public class MainApp extends Application {
         easyMenu.setTextFill(Color.ORANGE);
         easyMenu.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 60));
         setupHoverEffect(easyMenu, 5, 100);
-        easyMenu.setOnMouseClicked(e -> switchLevel());
+
+        easyMenu.setOnMouseClicked(e -> {
+            MazeApp level = new MazeApp("easy");
+            level.start(new Stage());
+            stage.close();
+        });
 
         //medium
         Label mediumMenu = new Label();
@@ -141,6 +113,12 @@ public class MainApp extends Application {
         mediumMenu.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 60));
         setupHoverEffect(mediumMenu, 5, 100);
 
+        mediumMenu.setOnMouseClicked(e -> {
+            MazeApp level = new MazeApp("medium");
+            level.start(new Stage());
+            stage.close();
+        });
+
         //hard
         Label hardMenu = new Label();
         hardMenu.setText("HARD");
@@ -149,6 +127,12 @@ public class MainApp extends Application {
         hardMenu.setTextFill(Color.ORANGE);
         hardMenu.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 60));
         setupHoverEffect(hardMenu, 5, 100);
+
+        hardMenu.setOnMouseClicked(e -> {
+            MazeApp level = new MazeApp("hard");
+            level.start(new Stage());
+            stage.close();
+        });
 
         Label title = new Label();
         title.setText("MAZZ");
@@ -212,12 +196,6 @@ public class MainApp extends Application {
                 transition.stop();
                 node.setTranslateX(setTranslateX);
             });
-    }
-
-    private void switchLevel() {
-        MazeEasy level = new MazeEasy();
-        level.start(new Stage());
-        stage.close();
     }
 
     public void switchToScene2(){

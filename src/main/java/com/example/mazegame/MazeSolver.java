@@ -8,22 +8,22 @@ public class MazeSolver implements Runnable {
     private boolean[][] visited;
     private int startRow;
     private int startCol;
-    private MazeEasy mazeEasy;
+    private MazeApp mazeApp;
     private GraphicsContext gc;
 
-    public MazeSolver(Maze maze, boolean[][] visited, int startRow, int startCol, MazeEasy mazeEasy, GraphicsContext gc) {
+    public MazeSolver(Maze maze, boolean[][] visited, int startRow, int startCol, MazeApp mazeApp, GraphicsContext gc) {
         this.maze = maze;
         this.visited = visited;
         this.startRow = startRow;
         this.startCol = startCol;
-        this.mazeEasy = mazeEasy;
+        this.mazeApp = mazeApp;
         this.gc = gc;
     }
 
     @Override
     public void run() {
         depthFirstSearch(startRow, startCol);
-        mazeEasy.setSolving(false);
+        mazeApp.setSolving(false);
     }
 
     private boolean depthFirstSearch(int row, int col) {
@@ -32,20 +32,20 @@ public class MazeSolver implements Runnable {
             visited[row][col] = true;
 
 
-            if (row == maze.getMazeEasy().length - 1 && col == maze.getMazeEasy()[0].length - 1) {
-                maze.getMazeEasy()[row][col] = '*';
+            if (row == maze.getMaze().length - 1 && col == maze.getMaze()[0].length - 1) {
+                maze.getMaze()[row][col] = '*';
                 Platform.runLater(() -> {
-                    mazeEasy.drawMaze(gc);
-                    mazeEasy.drawPlayer(gc);
+                    mazeApp.drawMaze(gc);
+                    mazeApp.drawPlayer(gc);
                 });
 
                 return true;
             }
 
-            maze.getMazeEasy()[row][col] = '*';
+            maze.getMaze()[row][col] = '*';
             Platform.runLater(() -> {
-                mazeEasy.drawMaze(gc);
-                mazeEasy.drawPlayer(gc);
+                mazeApp.drawMaze(gc);
+                mazeApp.drawPlayer(gc);
             });
 
             try {
@@ -63,11 +63,11 @@ public class MazeSolver implements Runnable {
             //Kiri
             if (depthFirstSearch(row, col - 1)) return true;
 
-            maze.getMazeEasy()[row][col] = ' ';
+            maze.getMaze()[row][col] = ' ';
             visited[row][col] = false;
             Platform.runLater(() -> {
-                mazeEasy.drawMaze(gc);
-                mazeEasy.drawPlayer(gc);
+                mazeApp.drawMaze(gc);
+                mazeApp.drawPlayer(gc);
             });
 
             try {
@@ -80,8 +80,8 @@ public class MazeSolver implements Runnable {
     }
 
     private boolean isValidMove(int row, int col) {
-        if (row >= 0 && row < maze.getMazeEasy().length && col >= 0 && col < maze.getMazeEasy()[0].length) {
-            return maze.getMazeEasy()[row][col] == '.' || maze.getMazeEasy()[row][col] == '*';
+        if (row >= 0 && row < maze.getMaze().length && col >= 0 && col < maze.getMaze()[0].length) {
+            return maze.getMaze()[row][col] == '.' || maze.getMaze()[row][col] == '*';
         }
         return false;
     }

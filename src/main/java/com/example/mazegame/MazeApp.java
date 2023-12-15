@@ -16,17 +16,31 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class MazeMedium extends Application {
+public class MazeApp extends Application {
     private Maze maze;
+
+    public int getMAZE_WIDTH() {
+        return MAZE_WIDTH;
+    }
+
+    public int getMAZE_HEIGHT() {
+        return MAZE_HEIGHT;
+    }
+
     private boolean[][] visited;
     private int playerRow;
     private int playerCol;
     private boolean isSolving;
     private Image youWinImage;
 
-    private static final int CELL_SIZE = 50;
-    private static final int MAZE_WIDTH = 13;
-    private static final int MAZE_HEIGHT = 10;
+    private String level;
+    private int CELL_SIZE;
+    private int MAZE_WIDTH;
+    private int MAZE_HEIGHT;
+
+    public MazeApp(String level) {
+        this.level = level;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -36,6 +50,20 @@ public class MazeMedium extends Application {
         youWinImage = new Image("file:src/assets/you-win.png");
 
         maze = new Maze();
+
+        if (level.equals("easy")){
+            maze.switchMaze(level);
+            CELL_SIZE = 50;
+        } else if (level.equals("medium")) {
+            maze.switchMaze(level);
+            CELL_SIZE = 18;
+        } else if (level.equals("hard")) {
+            maze.switchMaze(level);
+            CELL_SIZE = 8;
+        }
+
+        MAZE_WIDTH = maze.getMaze()[0].length;
+        MAZE_HEIGHT = maze.getMaze().length;
 
         BorderPane root = new BorderPane();
         root.setBackground(Background.fill(Color.BLACK));
@@ -73,14 +101,14 @@ public class MazeMedium extends Application {
         visited = new boolean[MAZE_HEIGHT][MAZE_WIDTH];
         playerRow = 0;
         playerCol = 0;
-        maze.getMazeEasy();
+        maze.getMaze();
     }
 
     public void drawMaze(GraphicsContext gc) {
         for (int j = 0; j < MAZE_WIDTH; j++) {
             for (int i = 0; i < MAZE_HEIGHT; i++) {
                 Color color;
-                switch (maze.getMazeEasy()[i][j]) {
+                switch (maze.getMaze()[i][j]) {
                     case '.':
                         color = Color.WHITE;
                         break;
@@ -109,7 +137,7 @@ public class MazeMedium extends Application {
 
     public boolean isValidMovePlayer(int row, int col) {
         if (row >= 0 && row < MAZE_HEIGHT && col >= 0 && col < MAZE_WIDTH) {
-            return maze.getMazeEasy()[row][col] == '.' || maze.getMazeEasy()[row][col] == '*' || maze.getMazeEasy()[row][col] == ' ';
+            return maze.getMaze()[row][col] == '.' || maze.getMaze()[row][col] == '*' || maze.getMaze()[row][col] == ' ';
         }
         return false;
     }
@@ -144,7 +172,7 @@ public class MazeMedium extends Application {
                 drawMaze(gc);
                 drawPlayer(gc);
 
-                if (playerRow == 9 && playerCol == 12) {
+                if (playerRow == getMAZE_HEIGHT()-1 && playerCol == getMAZE_WIDTH()-1) {
                     drawYouWin(gc);
                     setSolving(true);  // Set isSolving ke true agar tidak bisa bergerak lagi setelah menang
                 }

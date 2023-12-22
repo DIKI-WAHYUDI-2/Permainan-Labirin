@@ -3,6 +3,9 @@ package com.example.mazegame;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class MazeSolver implements Runnable {
     private Maze maze;
     private boolean[][] visited;
@@ -26,6 +29,57 @@ public class MazeSolver implements Runnable {
         mazeApp.setSolving(false);
     }
 
+    private void breadthFirstSearch(int startRow, int startCol) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{startRow, startCol});
+
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int row = current[0];
+            int col = current[1];
+
+            if (isValidMove(row, col) && !visited[row][col]) {
+                visited[row][col] = true;
+
+                if (row == maze.getMaze().length - 1 && col == maze.getMaze()[0].length - 1) {
+                    maze.getMaze()[row][col] = '*';
+                    Platform.runLater(() -> {
+                        mazeApp.drawMaze(gc);
+                        mazeApp.drawPlayer(gc);
+                    });
+                    break;
+                }
+
+                maze.getMaze()[row][col] = '*';
+                Platform.runLater(() -> {
+                    mazeApp.drawMaze(gc);
+                    mazeApp.drawPlayer(gc);
+                });
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                // Atas
+                if (isValidMove(row - 1, col)) queue.add(new int[]{row - 1, col});
+                // Kanan
+                if (isValidMove(row, col + 1)) queue.add(new int[]{row, col + 1});
+                // Bawah
+                if (isValidMove(row + 1, col)) queue.add(new int[]{row + 1, col});
+                // Kiri
+                if (isValidMove(row, col - 1)) queue.add(new int[]{row, col - 1});
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     private boolean depthFirstSearch(int row, int col) {
 
         if (isValidMove(row, col) && !visited[row][col]) {
@@ -44,6 +98,7 @@ public class MazeSolver implements Runnable {
 
             maze.getMaze()[row][col] = '*';
             Platform.runLater(() -> {
+
                 mazeApp.drawMaze(gc);
                 mazeApp.drawPlayer(gc);
             });
@@ -65,6 +120,7 @@ public class MazeSolver implements Runnable {
 
             maze.getMaze()[row][col] = ' ';
             visited[row][col] = false;
+
             Platform.runLater(() -> {
                 mazeApp.drawMaze(gc);
                 mazeApp.drawPlayer(gc);
@@ -78,6 +134,8 @@ public class MazeSolver implements Runnable {
         }
         return false;
     }
+
+
 
     private boolean isValidMove(int row, int col) {
         if (row >= 0 && row < maze.getMaze().length && col >= 0 && col < maze.getMaze()[0].length) {

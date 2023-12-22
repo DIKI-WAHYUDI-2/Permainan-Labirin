@@ -1,6 +1,7 @@
 module com.example.mazegame {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.jgrapht.core;
 //    requires javafx.web;
 
 //    requires org.controlsfx.controls;
@@ -13,4 +14,6 @@ module com.example.mazegame {
 
     opens com.example.mazegame to javafx.fxml;
     exports com.example.mazegame;
+    exports com.example.mazegame.Graph;
+    opens com.example.mazegame.Graph to javafx.fxml;
 }

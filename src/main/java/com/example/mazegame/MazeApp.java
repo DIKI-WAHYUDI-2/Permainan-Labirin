@@ -1,5 +1,6 @@
 package com.example.mazegame;
 
+import com.example.mazegame.Graph.Graph;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
@@ -18,6 +19,15 @@ import javafx.stage.Stage;
 
 public class MazeApp extends Application {
     private Maze maze;
+    private boolean[][] visited;
+    private int playerRow;
+    private int playerCol;
+    private boolean isSolving;
+    private Image youWinImage;
+    private String level;
+    private int CELL_SIZE;
+    private int MAZE_WIDTH;
+    private int MAZE_HEIGHT;
 
     public int getMAZE_WIDTH() {
         return MAZE_WIDTH;
@@ -26,17 +36,6 @@ public class MazeApp extends Application {
     public int getMAZE_HEIGHT() {
         return MAZE_HEIGHT;
     }
-
-    private boolean[][] visited;
-    private int playerRow;
-    private int playerCol;
-    private boolean isSolving;
-    private Image youWinImage;
-
-    private String level;
-    private int CELL_SIZE;
-    private int MAZE_WIDTH;
-    private int MAZE_HEIGHT;
 
     public MazeApp(String level) {
         this.level = level;
@@ -81,6 +80,16 @@ public class MazeApp extends Application {
 
         dfsButton.setOnMouseClicked(event -> solveMaze(gc));
         root.setRight(dfsButton);
+
+        Label bfsButton = new Label("BFS");
+        bfsButton.setTextFill(Color.ORANGE);
+        bfsButton.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 50));
+
+        bfsButton.setOnMouseEntered(e -> primaryStage.getScene().setCursor(Cursor.HAND));
+        bfsButton.setOnMouseExited(e -> primaryStage.getScene().setCursor(Cursor.DEFAULT));
+
+        bfsButton.setOnMouseClicked(event -> solveMaze(gc));
+        root.setLeft(bfsButton);
 
         initializeMaze();
         drawMaze(gc);

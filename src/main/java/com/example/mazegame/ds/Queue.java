@@ -1,4 +1,4 @@
-package com.example.mazegame;
+package com.example.mazegame.ds;
 
 public class Queue {
 

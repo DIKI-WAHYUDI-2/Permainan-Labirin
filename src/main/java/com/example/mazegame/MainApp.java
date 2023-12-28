@@ -1,5 +1,6 @@
 package com.example.mazegame;
 
+import com.example.mazegame.Maze.MazeApp;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -26,19 +27,17 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
         this.stage = stage;
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
+
         Image image = new Image("file:src/assets/layout-1.jpg");
         Image image2 = new Image("file:src/assets/layout-2.jpg");
-        Image image3 = new Image("file:src/assets/blood-element.png");
 
         ImageView imageView = new ImageView(image);
         ImageView imageView2 = new ImageView(image2);
-
 
         transition = createAndSetupTransition();
 
@@ -49,7 +48,7 @@ public class MainApp extends Application {
         label.setTranslateY(-100);
         label.setTextFill(Color.WHITE);
         label.setRotate(-8);
-        label.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 110));
+        label.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 110));
 
 
         Label label2 = new Label();
@@ -79,7 +78,6 @@ public class MainApp extends Application {
         root.getChildren().add(startButton);
         root.getChildren().add(label);
         root.getChildren().add(label2);
-
 
         //Scene 2
         Label difficultWord = new Label();
@@ -140,7 +138,7 @@ public class MainApp extends Application {
         title.setTranslateX(-480);
         title.setTranslateY(-230);
         title.setRotate(-8);
-        title.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 110));
+        title.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 110));
 
         Label title2 = new Label();
         title2.setText("Y");
@@ -148,7 +146,7 @@ public class MainApp extends Application {
         title2.setTranslateX(-338);
         title2.setTranslateY(-260);
         title2.setRotate(10);
-        title2.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 150));
+        title2.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 150));
 
         imageView2.setFitWidth(bounds.getWidth());
         imageView2.setFitHeight(bounds.getHeight());
@@ -170,20 +168,17 @@ public class MainApp extends Application {
         stage.setTitle("Maze Games");
         stage.show();
     }
-
     private TranslateTransition createAndSetupTransition() {
         TranslateTransition transition = new TranslateTransition();
         transition.setDuration(Duration.millis(200));
 
         return transition;
     }
-
     private void configureAndPlayTransition(Node node, double customSetByX) {
         transition.setNode(node);
         transition.setByX(customSetByX);
         transition.play();
     }
-
     private void setupHoverEffect(Node node, double setByX, int setTranslateX) {
 
             node.setOnMouseEntered(e -> {
@@ -201,7 +196,6 @@ public class MainApp extends Application {
     public void switchToScene2(){
         stage.setScene(scene2);
     }
-
     public static void main(String[] args) {
         launch();
     }

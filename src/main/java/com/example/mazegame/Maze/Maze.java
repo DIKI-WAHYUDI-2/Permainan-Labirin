@@ -1,4 +1,4 @@
-package com.example.mazegame;
+package com.example.mazegame.Maze;
 
 import com.example.mazegame.Graph.Graph;
 import com.example.mazegame.Graph.Vertice;
@@ -22,9 +22,9 @@ public class Maze {
                     {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '.', '.'}
             };
 
-            graph = new Graph(maze);
-            graph.printNodesWithNeighbors();
-            graph.findRoute(new Vertice(0,0),new Vertice(9,12));
+//            graph = new Graph(maze);
+//            graph.printNodesWithNeighbors();
+//            graph.findRoute(new Vertice(0,0),new Vertice(9,12));
 
         } else if (level.equals("medium")) {
             maze = new char[][]{
@@ -69,9 +69,9 @@ public class Maze {
                     {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '.', '.'}
             };
 
-            graph = new Graph(maze);
-            graph.printNodesWithNeighbors();
-            graph.findRoute(new Vertice(0,0),new Vertice(38,38));
+//            graph = new Graph(maze);
+//            graph.printNodesWithNeighbors();
+//            graph.findRoute(new Vertice(0,0),new Vertice(38,38));
 
         } else if (level.equals("hard")) {
             maze = new char[][] {
@@ -156,13 +156,13 @@ public class Maze {
                     {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '.'}
             };
 
-            graph = new Graph(maze);
-            graph.printNodesWithNeighbors();
-            graph.findRoute(new Vertice(0,0),new Vertice(78,62));
+//            graph = new Graph(maze);
+//            graph.printNodesWithNeighbors();
+//            graph.findRoute(new Vertice(0,0),new Vertice(78,62));
         }
     }
 
-    public static char[][] getMaze() {
+    public char[][] getMaze() {
         return maze;
     }
 }

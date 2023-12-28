@@ -16,4 +16,8 @@ module com.example.mazegame {
     exports com.example.mazegame;
     exports com.example.mazegame.Graph;
     opens com.example.mazegame.Graph to javafx.fxml;
+    exports com.example.mazegame.Maze;
+    opens com.example.mazegame.Maze to javafx.fxml;
+    exports com.example.mazegame.ds;
+    opens com.example.mazegame.ds to javafx.fxml;
 }

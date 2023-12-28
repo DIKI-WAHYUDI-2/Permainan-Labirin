@@ -1,20 +1,31 @@
 package com.example.mazegame.Graph;
 
+import com.example.mazegame.Maze.Maze;
+import com.example.mazegame.Maze.MazeApp;
 import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
 
 import java.util.*;
 
-public class Graph {
+public class Graph implements Runnable {
 
     private int rows;
     private int cols;
     private List<Vertice>[][] adjacencyList;
     private List<List<Vertice>> dfsGroups;
-    public Graph(char[][] maze) {
+    private MazeApp mazeApp;
+    private GraphicsContext gc;
+    private Maze mazes;
+
+    public Graph(char[][] maze, Maze mazes, MazeApp mazeApp, GraphicsContext gc) {
         this.rows = maze.length;
         this.cols = maze[0].length;
         this.adjacencyList = new ArrayList[rows][cols];
         this.dfsGroups = new ArrayList<>();
+
+        this.mazeApp = mazeApp;
+        this.gc = gc;
+        this.mazes = mazes;
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -108,13 +119,28 @@ public class Graph {
             System.out.println("Stop node reached!");
             dfsGroups.add(new ArrayList<>(currentGroup));
             visited[row][col] = false; // Reset visited status for backtracking
+
+            mazes.getMaze()[row][col] = '*';
+            Platform.runLater(() -> {
+                mazeApp.drawMaze(gc);
+                mazeApp.drawPlayer(gc);
+            });
+
             return;
         }
 
-        Platform.runLater(() ->{
+        mazes.getMaze()[row][col] = '*';
+        Platform.runLater(() -> {
 
-
+            mazeApp.drawMaze(gc);
+            mazeApp.drawPlayer(gc);
         });
+
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         List<Vertice> neighbors = getNeighbors(currentVertice);
         for (Vertice neighbor : neighbors) {
@@ -133,8 +159,25 @@ public class Graph {
 
         // Backtrack: Remove the last node from the current group dan reset visited status
         currentGroup.remove(currentGroup.size() - 1);
+        mazes.getMaze()[row][col] = ' ';
         visited[row][col] = false;
+
+        Platform.runLater(() -> {
+            mazeApp.drawMaze(gc);
+            mazeApp.drawPlayer(gc);
+        });
+
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-
+    @Override
+    public void run() {
+        printNodesWithNeighbors();
+        findRoute(new Vertice(0,0),new Vertice(rows-1,cols-1));
+        mazeApp.setSolving(false);
+    }
 }

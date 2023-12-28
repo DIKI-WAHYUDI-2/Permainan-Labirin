@@ -1,6 +1,7 @@
-package com.example.mazegame;
+package com.example.mazegame.Maze;
 
 import com.example.mazegame.Graph.Graph;
+import com.example.mazegame.MainApp;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
@@ -41,12 +43,15 @@ public class MazeApp extends Application {
         this.level = level;
     }
 
+
+
     @Override
     public void start(Stage primaryStage) {
+
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
-        youWinImage = new Image("file:src/assets/you-win.png");
+        youWinImage = new Image("file:src/assets/you-win1.png");
 
         maze = new Maze();
 
@@ -64,32 +69,24 @@ public class MazeApp extends Application {
         MAZE_WIDTH = maze.getMaze()[0].length;
         MAZE_HEIGHT = maze.getMaze().length;
 
-        BorderPane root = new BorderPane();
+        StackPane root = new StackPane();
         root.setBackground(Background.fill(Color.BLACK));
         Canvas canvas = new Canvas(MAZE_WIDTH * CELL_SIZE, MAZE_HEIGHT * CELL_SIZE);
-        root.setCenter(canvas);
+        root.getChildren().add(canvas);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         Label dfsButton = new Label("DFS");
         dfsButton.setTextFill(Color.ORANGE);
-        dfsButton.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 50));
+        dfsButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Bobby-Jones-Soft.otf"), 50));
+        dfsButton.setTranslateX(640);
+        dfsButton.setTranslateY(-300);
 
         dfsButton.setOnMouseEntered(e -> primaryStage.getScene().setCursor(Cursor.HAND));
         dfsButton.setOnMouseExited(e -> primaryStage.getScene().setCursor(Cursor.DEFAULT));
 
         dfsButton.setOnMouseClicked(event -> solveMaze(gc));
-        root.setRight(dfsButton);
-
-        Label bfsButton = new Label("BFS");
-        bfsButton.setTextFill(Color.ORANGE);
-        bfsButton.setFont(Font.loadFont(getClass().getResourceAsStream("/Bobby-Jones-Soft.otf"), 50));
-
-        bfsButton.setOnMouseEntered(e -> primaryStage.getScene().setCursor(Cursor.HAND));
-        bfsButton.setOnMouseExited(e -> primaryStage.getScene().setCursor(Cursor.DEFAULT));
-
-        bfsButton.setOnMouseClicked(event -> solveMaze(gc));
-        root.setLeft(bfsButton);
+        root.getChildren().add(dfsButton);
 
         initializeMaze();
         drawMaze(gc);
@@ -198,8 +195,8 @@ public class MazeApp extends Application {
 
     public void solveMaze(GraphicsContext gc) {
         isSolving = true;
-        MazeSolver mazeSolver = new MazeSolver(maze, visited, playerRow, playerCol, this, gc);
-        new Thread(mazeSolver).start();
+        Graph graph = new Graph(maze.getMaze() ,maze,this,gc);
+        new Thread(graph).start();
     }
 
     public void setSolving(boolean solving) {
